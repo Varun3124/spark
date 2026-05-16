@@ -62,7 +62,7 @@ def extract_structured_data(user_query: str):
         
         try:
             text_response = extract_with_groq(prompt)
-            provider = "groq"
+            provider = "groq (fallback)"
 
         except Exception as groq_error:
             print(f"Groq failed: {groq_error}")

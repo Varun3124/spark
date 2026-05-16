@@ -7,5 +7,6 @@ class Query(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     raw_query = Column(String, nullable=False)
+    llm_provider = Column(String, nullable=True)
     extracted_data = Column(Text,nullable=False)
     

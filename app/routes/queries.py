@@ -20,6 +20,7 @@ def create_query(payload: QueryRequest, db: Session = Depends(get_db)):
     
     db_query = Query(
         raw_query=payload.query,
+        llm_provider=provider,
         extracted_data=json.dumps(extracted_data)
     )
     
@@ -36,7 +37,7 @@ def create_query(payload: QueryRequest, db: Session = Depends(get_db)):
 
 @router.get("/{query_id}")
 def get_query(query_id: int, db: Session = Depends(get_db)):
-    query = db.query(Query).filter(db.id == query_id).first()
+    query = db.query(Query).filter(Query.id == query_id).first()
     
     if not query:
         raise HTTPException(status_code=404, detail="Query not found")
@@ -44,5 +45,6 @@ def get_query(query_id: int, db: Session = Depends(get_db)):
     return {
         "id": query.id,
         "query": query.raw_query,
+        "llm_provider": query.llm_provider,
         "extracted_data": json.loads(query.extracted_data)
     }
