@@ -13,7 +13,10 @@ router = APIRouter(prefix="/queries", tags=["Queries"])
 
 @router.post("/")
 def create_query(payload: QueryRequest, db: Session = Depends(get_db)):
-    extracted_data = extract_structured_data(payload.query)
+    llm_response = extract_structured_data(payload.query)
+    
+    provider = llm_response["provider"]
+    extracted_data = llm_response["data"]
     
     db_query = Query(
         raw_query=payload.query,
@@ -27,6 +30,7 @@ def create_query(payload: QueryRequest, db: Session = Depends(get_db)):
     return {
         "id": db_query.id,
         "query": db_query.raw_query,
+        "llm_provider": provider,
         "extracted_data": extracted_data
     }
 
